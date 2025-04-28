@@ -1,4 +1,4 @@
-version: '3.0'
+version: '3.8'
 services:
   backend:
     build: 
@@ -7,16 +7,16 @@ services:
     ports:
       - "8080:8080"
     depends_on:
-      - db  
+      - db
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/contact_manager
       SPRING_DATASOURCE_USERNAME: dev_user
       SPRING_DATASOURCE_PASSWORD: dev17
   db:
-    image: postgres:15
+    image: yehorka/contact-manager:latest
     restart: always
     ports:
-      - "5433:5432"
+      - "5432:5432"
     environment:
       POSTGRES_USER: dev_user
       POSTGRES_PASSWORD: dev17

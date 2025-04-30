@@ -1,0 +1,10 @@
+variables:
+  DOCKER_IMAGE: yehorka/contact-manager
+
+stages:
+  - build
+  - test
+  - deploy
+
+  
+

@@ -9,11 +9,11 @@ services:
     depends_on:
       - db
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/contact_manager
-      SPRING_DATASOURCE_USERNAME: dev_user
-      SPRING_DATASOURCE_PASSWORD: dev17
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/contact_manager
+      - SPRING_DATASOURCE_USERNAME=dev_user
+      - SPRING_DATASOURCE_PASSWORD=dev17
   db:
-    image: yehorka/contact-manager:latest
+    image: postgres:15
     restart: always
     ports:
       - "5432:5432"

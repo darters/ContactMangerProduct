@@ -1,7 +1,8 @@
 image: maven:3.9.6-eclipse-temurin-21
 
 services:
-  - postgres:15
+  - name: postgres:15
+    alias: postgres
 variables:
 
 
@@ -15,7 +16,10 @@ variables:
 build-job:
   stage: build
   script:
-    - echo "Start building proj"
+    - echo "Waiting for DB...."
+    - apt-get update && apt-get install -y netcat
+    - until nc -z postgres 5432; do echo "Waiting for postgres..."; sleep 1; done
+    - echo "Postgres is up!"
     - cd contact-manager
     - sed -i "s|spring.datasource.url=.*|spring.datasource.url=jdbc:postgresql://postgres:5432/contact_manager|" src/main/resources/application.properties
     - mvn $MAVEN_CLI_OPTS clean package

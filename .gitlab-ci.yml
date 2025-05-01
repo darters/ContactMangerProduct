@@ -1,5 +1,10 @@
 image: maven:3.9.6-eclipse-temurin-21
 
+services:
+  - postgres:15
+variables:
+
+
 stages:
   - build
   - test
@@ -12,6 +17,7 @@ build-job:
   script:
     - echo "Start building proj"
     - cd contact-manager
+    - sed -i "s|spring.datasource.url=.*|spring.datasource.url=jdbc:postgresql://postgres:5432/contact_manager|" src/main/resources/application.properties
     - mvn $MAVEN_CLI_OPTS clean package
   artifacts:
     paths:

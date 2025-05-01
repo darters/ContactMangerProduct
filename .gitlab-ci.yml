@@ -1,20 +1,22 @@
-image: maven:3.9.6-eclipse-temurin-21
-
 services:
   - alias: postgres
     name: postgres:15
+    command: ["postgres"]
+    variables:
+      POSTGRES_PASSWORD: dev17
 
 variables:
-
+  POSTGRES_DB: contact-manager
+  POSTGRES_USER: dev_user
+  POSTGRES_PASSWORD: dev17 
+  MAVEN_CLI_OPTS: "-B -DskipTests=false"
 
 stages:
   - build
   - test
 
-variables:
-  MAVEN_CLI_OPTS: "-B -DskipTests=false"
-
 build-job:
+  image: maven:3.9.6-eclipse-temurin-21
   stage: build
   script:
     - echo "Waiting for DB...."
@@ -29,9 +31,13 @@ build-job:
       - contact-manager/target/*.jar
 
 test-job:
+  image: maven:3.9.6-eclipse-temurin-21
   stage: test
   script:
-    - echo "Running tests"
+    - echo "Waiting for DB...."
+    - apt-get update && apt-get install -y netcat
+    - until nc -z postgres 5432; do echo "Waiting for postgres..."; sleep 1; done
+    - echo "Postgres is up!"
     - cd contact-manager
     - mvn test
 

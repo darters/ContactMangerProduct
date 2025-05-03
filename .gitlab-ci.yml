@@ -1,43 +1,16 @@
-services:
-  - alias: postgres
-    name: postgres:15
-    command: ["postgres"]
-    variables:
-      POSTGRES_PASSWORD: dev17
-
-variables:
-  POSTGRES_DB: contact-manager
-  POSTGRES_USER: dev_user
-  POSTGRES_PASSWORD: dev17 
-  MAVEN_CLI_OPTS: "-B -DskipTests=false"
+image: maven:3.9.6-eclipse-temurin-21
 
 stages:
   - build
-  - test
+  - deploy
 
 build-job:
-  image: maven:3.9.6-eclipse-temurin-21
   stage: build
   script:
-    - echo "Waiting for DB...."
-    - apt-get update && apt-get install -y netcat
-    - until nc -z postgres 5432; do echo "Waiting for postgres..."; sleep 1; done
-    - echo "Postgres is up!"
-    - cd contact-manager
-    - sed -i "s|spring.datasource.url=.*|spring.datasource.url=jdbc:postgresql://postgres:5432/contact_manager|" src/main/resources/application.properties
-    - mvn $MAVEN_CLI_OPTS clean package
-  artifacts:
-    paths:
-      - contact-manager/target/*.jar
+    - echo "Start building"
+    - docker build -t yehorka/cont-manger:3.00 /contact-manager 
 
-test-job:
-  image: maven:3.9.6-eclipse-temurin-21
-  stage: test
-  script:
-    - echo "Waiting for DB...."
-    - apt-get update && apt-get install -y netcat
-    - until nc -z postgres 5432; do echo "Waiting for postgres..."; sleep 1; done
-    - echo "Postgres is up!"
-    - cd contact-manager
-    - mvn test
-
+deploy-job:
+  stage: deploy
+  sript:
+    - docker compose up -d

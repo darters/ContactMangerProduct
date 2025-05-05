@@ -1,11 +1,9 @@
 version: '3.8'
 services:
   backend:
-    build: 
-      context: .
-      dockerfile: Dockerfile
+    image: yehorka/contact-manager:latest
     ports:
-      - "8080:8080"
+      - "8085:8080"
     depends_on:
       - db
     environment:
@@ -16,7 +14,7 @@ services:
     image: postgres:15
     restart: always
     ports:
-      - "5432:5432"
+      - "5435:5432"
     environment:
       POSTGRES_USER: dev_user
       POSTGRES_PASSWORD: dev17

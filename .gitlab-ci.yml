@@ -11,4 +11,4 @@ build-job:
 deploy-job:
   stage: deploy
   script:
-    - docker compose -f contact-manager/docker-compsoe.yml up -d
+    - docker compose -f contact-manager/docker-compose.yml up -d
